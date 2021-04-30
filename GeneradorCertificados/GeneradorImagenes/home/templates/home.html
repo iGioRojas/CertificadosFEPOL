@@ -56,11 +56,11 @@
         <div class="row">
           <div class="col-sm">
             <label for="formFile" class="form-label">Coordenada en x: &nbsp;</label><input type="number" id="X"
-              name="coordenadaX">
+              name="coordenadaX" value=100>
           </div>
           <div class="col-sm">
             <label for="formFile" class="form-label">Coordenada en y: &nbsp;</label><input type="number" id="Y"
-              name="coordenadaY">
+              name="coordenadaY" value=100>
           </div>
         </div>
         <br>
@@ -71,7 +71,7 @@
           </div>
           <div class="col-sm">
             <label for="formFile" class="form-label">Tamaño del Texto en px: &nbsp;</label><input type="number"
-              id="TAMANIO" name="tamanioTXT">
+              id="TAMANIO" name="tamanioTXT" value="20">
           </div>
           <div class="col-sm">
             <label for="formFile" class="form-label">Ingrese el link de la cancion de Spotify: &nbsp;</label><input type="number"
@@ -86,8 +86,8 @@
         <hr style="border: 2px solid #000000">
         <label style="margin: 0px 0px 20px 20px;">Previsualización (La calidad de la imagen no cambia al
           descargarse)</label>
-        <canvas id="micanvas" style="border: 2px solid #000000; display: block;  margin: auto;" width="464px"
-          height="319px">
+        <canvas id="micanvas" style="border: 2px solid #000000; display: block;  margin: auto;" width="1024px"
+          height="727px">
           Contenido que sólo verán los usuarios que no soportan canvas en su navegador.
         </canvas>
         <script>
@@ -102,7 +102,6 @@
             return false;
           }
           function updateCanvas(archivo, ctx) {
-            
             var img = new Image();
             const archivos = archivo.files;
             const primerArchivo = archivos[0];
@@ -111,13 +110,18 @@
             // Y a la fuente de la imagen le ponemos el objectURL
             img.src = objectURL;
             img.onload = function () {
-              ctx.drawImage(img, 0, 0, img.width, img.height);
-              ctx.font=$tam.value+"px Arial"
+              ctx.drawImage(img,0,0);
+              //Si la fuente no esta cargada, por defecto se usa Arial
+              if($seleccionarFuente.files.length!=0)
+                ctx.font=$tam.value+"px MyCanvasFont"
+              else
+                ctx.font=$tam.value+"px Arial"
               ctx.fillStyle=$color.value
               ctx.fillText("Este es un Texto de Prueba",$X.value, $Y.value)
             }
           }
           const $seleccionArchivos = document.querySelector("#formFile");
+          const $seleccionarFuente= document.querySelector("#formFileSm")
           var ctx = cargaContextoCanvas('micanvas')
 
           const $X = document.getElementById("X")
@@ -139,6 +143,14 @@
 
           $color.addEventListener("change",()=>{
             updateCanvas($seleccionArchivos,ctx)
+          });
+
+          $seleccionarFuente.addEventListener("change", () => {
+            //Se agrega la fuente desde el cache usando FontFace
+            let f = new FontFace("MyCanvasFont", "url("+URL.createObjectURL($seleccionarFuente.files[0])+")");
+            f.load();
+            document.fonts.add(f);
+            updateCanvas($seleccionArchivos,ctx)         
           });
 
           $seleccionArchivos.addEventListener("change", () => {

@@ -32,7 +32,7 @@ def certificado(request):
         plantilla.tipoLetra = request.FILES.get("typeTXT")
         plantilla.colorTexto = request.POST.get("colorTXT")
         plantilla.tamanioTexto = request.POST.get("tamanioTXT")
-        plantilla.save()
+        plantilla.save() #ORM
     if certificado:
         generarCertificado(certificado,id)
         Archivo = Certificado.objects.get(documentoDatos = id)
@@ -48,7 +48,7 @@ def generarCertificado(isPdf,id):
     for nombre in datos:
         certificado = Image.open(objeto.imagen)
         nuevo = ImageDraw.Draw(certificado)
-        coordenadas = (objeto.coordenadaX, objeto.coordenadaY)
+        coordenadas = (objeto.coordenadaX, objeto.coordenadaY-objeto.tamanioTexto+10)
         color_texto = hexToRGB(objeto.colorTexto)
         nuevo.text(coordenadas, nombre, fill=color_texto, font=tipo_letra)
         if isPdf:
@@ -62,7 +62,7 @@ def generarCertificado(isPdf,id):
             archivoGenerado.save()
         else:
             certificado.save("media/jpg/"+nombre+".jpg")
-    objeto.archivoRAR =nombreRAR
+    objeto.archivoRAR = nombreRAR
     objeto.save() 
 
 def hexToRGB(hexa):
