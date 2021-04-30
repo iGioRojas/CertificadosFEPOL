@@ -113,6 +113,7 @@
             img.onload = function () {
               ctx.drawImage(img, 0, 0, img.width, img.height);
               ctx.font=$tam.value+"px Arial"
+              ctx.fillStyle=$color.value
               ctx.fillText("Este es un Texto de Prueba",$X.value, $Y.value)
             }
           }
@@ -122,6 +123,7 @@
           const $X = document.getElementById("X")
           const $Y = document.getElementById("Y")
           const $tam=document.getElementById("TAMANIO")
+          const $color=document.getElementById("COLOR")
           // Escuchar cuando cambie
           $X.addEventListener("change", () => {
             updateCanvas($seleccionArchivos, ctx)
@@ -132,6 +134,10 @@
           });
 
           $tam.addEventListener("change",()=>{
+            updateCanvas($seleccionArchivos,ctx)
+          });
+
+          $color.addEventListener("change",()=>{
             updateCanvas($seleccionArchivos,ctx)
           });
 
