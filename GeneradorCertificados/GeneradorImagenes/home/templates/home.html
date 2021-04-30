@@ -73,6 +73,10 @@
             <label for="formFile" class="form-label">Tamaño del Texto en px: &nbsp;</label><input type="number"
               id="TAMANIO" name="tamanioTXT">
           </div>
+          <div class="col-sm">
+            <label for="formFile" class="form-label">Ingrese el link de la cancion de Spotify: &nbsp;</label><input type="number"
+              id="lnkCancion" name="cancion">
+          </div>
         </div>
       </div>
       <!--  -->
@@ -108,7 +112,8 @@
             img.src = objectURL;
             img.onload = function () {
               ctx.drawImage(img, 0, 0, img.width, img.height);
-              ctx.fillRect($X.value, $Y.value, 60, 10)
+              ctx.font=$tam.value+"px Arial"
+              ctx.fillText("Este es un Texto de Prueba",$X.value, $Y.value)
             }
           }
           const $seleccionArchivos = document.querySelector("#formFile");
@@ -116,6 +121,7 @@
 
           const $X = document.getElementById("X")
           const $Y = document.getElementById("Y")
+          const $tam=document.getElementById("TAMANIO")
           // Escuchar cuando cambie
           $X.addEventListener("change", () => {
             updateCanvas($seleccionArchivos, ctx)
@@ -123,6 +129,10 @@
 
           $Y.addEventListener("change", () => {
             updateCanvas($seleccionArchivos, ctx)
+          });
+
+          $tam.addEventListener("change",()=>{
+            updateCanvas($seleccionArchivos,ctx)
           });
 
           $seleccionArchivos.addEventListener("change", () => {
