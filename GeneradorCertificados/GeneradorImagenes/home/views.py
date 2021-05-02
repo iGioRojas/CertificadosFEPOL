@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 import pandas as pd
 from datetime import datetime
 from zipfile import *
+import requests
 # Create your views here.
 
 
@@ -19,6 +20,7 @@ def certificado(request):
     if request.POST: 
         plantilla = Certificado() 
         plantilla.imagen = request.FILES.get("imgPC")
+        print(plantilla.imagen)
         plantilla.documentoDatos = request.FILES.get("infoCertificado")
         id = plantilla.documentoDatos
         plantilla.coordenadaX = request.POST.get("coordenadaX")
@@ -32,6 +34,7 @@ def certificado(request):
         plantilla.tipoLetra = request.FILES.get("typeTXT")
         plantilla.colorTexto = request.POST.get("colorTXT")
         plantilla.tamanioTexto = request.POST.get("tamanioTXT")
+        plantilla.urlSpotify=request.POST.get("cancion")
         plantilla.save() #ORM
     if certificado:
         generarCertificado(certificado,id)
@@ -46,7 +49,16 @@ def generarCertificado(isPdf,id):
     datos = pd.read_csv(objeto.documentoDatos, sep=",")["Nombres"].to_list()
     tipo_letra = ImageFont.truetype(objeto.tipoLetra, objeto.tamanioTexto)
     for nombre in datos:
+        nom=guardaImg(objeto.urlSpotify)
+        qr=Image.open("media/plantillas/"+nom+".png")
         certificado = Image.open(objeto.imagen)
+        certificadoW=certificado.size[0]
+        certificadoH=certificado.size[1]
+        qrsize=(int(qr.size[0]/3.5),int(qr.size[1]/3.5))
+        qr=qr.resize(qrsize,Image.ANTIALIAS)
+        ubicacion= (int(certificadoW/2)-int(qrsize[0]/2),certificadoH-70)
+        print(ubicacion,qrsize)
+        certificado.paste(qr,ubicacion)
         nuevo = ImageDraw.Draw(certificado)
         coordenadas = (objeto.coordenadaX, objeto.coordenadaY-objeto.tamanioTexto+10)
         color_texto = hexToRGB(objeto.colorTexto)
@@ -86,4 +98,27 @@ def hexToDec(hexNumber):
 
     return decimalValue
 
+def guardaImg(url):
+    url=qrSpotify(url)
+    url_imagen = url # El link de la imagen
+    nombre=url[url.find("/"):].replace("/","").replace(".","").replace(":","")
+    nombre_local_imagen = "media/plantillas/"+nombre+".png" # El nombre con el que queremos guardarla
+    imagen = requests.get(url_imagen).content
+    with open(nombre_local_imagen, 'wb') as handler:
+        handler.write(imagen)
+        return nombre
+    
+def urispotify(link):
+    ini = link.find("spotify")
+    end = link.find("?")
+    print(ini,end)
+    link=link[ini:end]
+    link=link.replace(".com","")
+    link=link.replace("/",":")
+    return link
 
+def qrSpotify(link):
+    uri=urispotify(link)
+    url="https://scannables.scdn.co/uri/plain/png/ffffff/black/640/"+uri
+    return url
+          

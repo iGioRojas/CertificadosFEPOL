@@ -74,7 +74,7 @@
               id="TAMANIO" name="tamanioTXT" value="20">
           </div>
           <div class="col-sm">
-            <label for="formFile" class="form-label">Ingrese el link de la cancion de Spotify: &nbsp;</label><input type="number"
+            <label for="formFile" class="form-label">Ingrese el link de la cancion de Spotify: &nbsp;</label><input type="url"
               id="lnkCancion" name="cancion">
           </div>
         </div>
@@ -87,10 +87,15 @@
         <label style="margin: 0px 0px 20px 20px;">Previsualización (La calidad de la imagen no cambia al
           descargarse)</label>
         <canvas id="micanvas" style="border: 2px solid #000000; display: block;  margin: auto;" width="1024px"
-          height="727px">
+          height="727px" name="mycanvas">
           Contenido que sólo verán los usuarios que no soportan canvas en su navegador.
         </canvas>
-        <script>
+        
+      </div>
+      <div style="margin:20px">
+        <input type="submit" value="Generar Certificados" style="display:block; margin:auto" id="enviar">
+      </div>
+      <script>
           function cargaContextoCanvas(idCanvas) {
             var elemento = document.getElementById(idCanvas);
             if (elemento && elemento.getContext) {
@@ -101,25 +106,61 @@
             }
             return false;
           }
-          function updateCanvas(archivo, ctx) {
+          function updateCanvas(archivo, ctx, view) {
             var img = new Image();
             const archivos = archivo.files;
             const primerArchivo = archivos[0];
             // Lo convertimos a un objeto de tipo objectURL
             const objectURL = URL.createObjectURL(primerArchivo);
-            // Y a la fuente de la imagen le ponemos el objectURL
             img.src = objectURL;
-            img.onload = function () {
+            img.onload=function(){
               ctx.drawImage(img,0,0);
-              //Si la fuente no esta cargada, por defecto se usa Arial
-              if($seleccionarFuente.files.length!=0)
+              if($urlspotify.value.indexOf("open.spotify/"!=-1)){
+                drawQr(ctx,img)
+              }
+              drawText(ctx)
+            }
+          }
+
+
+          function drawQr(ctx,img){
+            var img2 = new Image()
+            img2.crossOrigin="anonymous"
+            img2.src = qrSpotify($urlspotify.value)
+            img2.onload=function(){
+              let qrw=img2.width/3.5
+              let qrh=img2.height/3.5
+              let posqrw=(img.width/2)-(qrw/2)
+              let posqrh=img.height-60
+              ctx.drawImage(img2,posqrw,posqrh,qrw,qrh)
+            }
+          }
+
+          function drawText(ctx){
+            if($seleccionarFuente.files.length!=0)
                 ctx.font=$tam.value+"px MyCanvasFont"
               else
                 ctx.font=$tam.value+"px Arial"
               ctx.fillStyle=$color.value
               ctx.fillText("Este es un Texto de Prueba",$X.value, $Y.value)
-            }
           }
+          
+
+          function urispotify(link){
+              let ini = link.indexOf("spotify")
+              let end = link.indexOf("?")
+              link=link.slice(ini,end)
+              link=link.replace(".com","")
+              link=link.replaceAll("/",":")
+              return link
+          }
+
+          function qrSpotify(link){
+            let uri=urispotify(link)
+            let url="https://scannables.scdn.co/uri/plain/png/ffffff/black/640/"+uri
+            return url
+          }
+
           const $seleccionArchivos = document.querySelector("#formFile");
           const $seleccionarFuente= document.querySelector("#formFileSm")
           var ctx = cargaContextoCanvas('micanvas')
@@ -128,7 +169,13 @@
           const $Y = document.getElementById("Y")
           const $tam=document.getElementById("TAMANIO")
           const $color=document.getElementById("COLOR")
+          const $urlspotify=document.getElementById("lnkCancion")
+          const $btn = document.querySelector("#enviar")
           // Escuchar cuando cambie
+          $btn.addEventListener("click", () => {
+            
+          })
+
           $X.addEventListener("change", () => {
             updateCanvas($seleccionArchivos, ctx)
           });
@@ -142,6 +189,10 @@
           });
 
           $color.addEventListener("change",()=>{
+            updateCanvas($seleccionArchivos,ctx)
+          });
+
+          $urlspotify.addEventListener("change",()=>{
             updateCanvas($seleccionArchivos,ctx)
           });
 
@@ -178,10 +229,6 @@
             }
           });
         </script>
-      </div>
-      <div style="margin:20px">
-        <input type="submit" value="Generar Certificados" style="display:block; margin:auto">
-      </div>
     </form>
 </body>
 

@@ -11,6 +11,7 @@ class Certificado(models.Model):
     tipoLetra = models.FileField(upload_to="archivos", null=True, blank=True)
     tamanioTexto = models.IntegerField(null = False,default = 11)
     colorTexto = models.CharField(null = True,max_length=8)
+    urlSpotify= models.CharField(null=True,max_length=120)
     archivoRAR = models.FileField(upload_to="archivos", null=True, blank=True)
 
 
