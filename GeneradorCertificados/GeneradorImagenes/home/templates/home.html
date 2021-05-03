@@ -26,12 +26,12 @@
       </div>
       <div class="mb-3">
         <label for="formFile" class="form-label">Documento de Datos (.csv)</label>
-        <input class="form-control" type="file" id="formFile" name="infoCertificado" accept=".csv">
+        <input class="form-control" type="file" id="formFileCv" name="infoCertificado" accept=".csv" disabled>
         <br>
         <div class="mb-3">
           <label for="formFileSm" class="form-label">Tipo de letra (opcional, por defecto: Arial)</label>
           <input class="form-control form-control-sm" id="formFileSm" type="file" name="typeTXT"
-            accept=".ttf, .otf, .eot, .woff">
+            accept=".ttf, .otf, .eot, .woff" disabled>
         </div>
         <label for="formFileSm" class="form-label">Objetivo del archivo</label>
       <div class="form-check">
@@ -56,26 +56,26 @@
         <div class="row">
           <div class="col-sm">
             <label for="formFile" class="form-label">Coordenada en x: &nbsp;</label><input type="number" id="X"
-              name="coordenadaX" value=100>
+              name="coordenadaX" value=100 disabled>
           </div>
           <div class="col-sm">
             <label for="formFile" class="form-label">Coordenada en y: &nbsp;</label><input type="number" id="Y"
-              name="coordenadaY" value=100>
+              name="coordenadaY" value=100 disabled>
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-sm">
             <label for="formFile" class="form-label">Color del Texto: &nbsp;</label><input type="color" id="COLOR"
-              name="colorTXT">
+              name="colorTXT" disabled>
           </div>
           <div class="col-sm">
             <label for="formFile" class="form-label">Tamaño del Texto en px: &nbsp;</label><input type="number"
-              id="TAMANIO" name="tamanioTXT" value="20">
+              id="TAMANIO" name="tamanioTXT" value="20" disabled>
           </div>
           <div class="col-sm">
             <label for="formFile" class="form-label">Ingrese el link de la cancion de Spotify: &nbsp;</label><input type="url"
-              id="lnkCancion" name="cancion">
+              id="lnkCancion" name="cancion" disabled>
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@
         
       </div>
       <div style="margin:20px">
-        <input type="submit" value="Generar Certificados" style="display:block; margin:auto" id="enviar">
+        <input type="submit" value="Generar Certificados" style="display:block; margin:auto" id="enviar" disabled>
       </div>
       <script>
           function cargaContextoCanvas(idCanvas) {
@@ -171,10 +171,11 @@
           const $color=document.getElementById("COLOR")
           const $urlspotify=document.getElementById("lnkCancion")
           const $btn = document.querySelector("#enviar")
+          const $datos = document.getElementById("formFileCv")
           // Escuchar cuando cambie
-          $btn.addEventListener("click", () => {
-            
-          })
+          $datos.addEventListener("change", => {
+            $btn.disabled=false;
+          });
 
           $X.addEventListener("change", () => {
             updateCanvas($seleccionArchivos, ctx)
@@ -205,6 +206,13 @@
           });
 
           $seleccionArchivos.addEventListener("change", () => {
+            document.getElementById("formFileCv").disabled=false;
+            $X.disabled=false;
+            $Y.disabled=false;
+            $tam.disabled=false;
+            $color.disabled=false;
+            $seleccionarFuente.disabled=false;
+            $urlspotify.disabled=false;
             var img = new Image();
             // Los archivos seleccionados, pueden ser muchos o uno
             const archivos = $seleccionArchivos.files;
