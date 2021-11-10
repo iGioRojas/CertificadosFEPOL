@@ -1,3 +1,6 @@
+import requests
+
+
 def hexToRGB(hexa):
     red = hexa[1:3]
     green = hexa[3:5]
@@ -32,7 +35,6 @@ def guardaImg(url):
 def urispotify(link):
     ini = link.find("spotify")
     end = link.find("?")
-    print(ini,end)
     link=link[ini:end]
     link=link.replace(".com","")
     link=link.replace("/",":")
