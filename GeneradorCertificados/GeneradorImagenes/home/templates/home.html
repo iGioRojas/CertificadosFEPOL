@@ -21,7 +21,7 @@
       <!-- Django help -->
       <div class="mb-3">
         <label for="formFile" class="form-label">Imagen (.jpg) </label>
-        <input class="form-control" type="file" id="formFile" name="imgPC" accept=".jpg, .jpeg .png" />
+        <input class="form-control" type="file" id="formFile" name="imgPC" accept=".png, .jpg, .jpeg" />
       </div>
       <div class="mb-3">
         <label for="formFile" class="form-label">Documento de Datos (.csv)</label>
@@ -59,13 +59,12 @@
                   id="TAMANIO" name="tamanioTXT" value="20" disabled />
               </div>
             </div>
-            <br />
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-sm">
                 <label for="formFile" class="form-label">Ingrese el link de la cancion de Spotify: &nbsp;</label><input
                   type="url" id="lnkCancion" name="cancion" disabled />
               </div>
-            </div>
+            </div> -->
           </div>
           <!--  -->
           <br />
@@ -103,9 +102,9 @@
             img.src = objectURL;
             img.onload=function(){
               ctx.drawImage(img,0,0);
-              if($urlspotify.value.indexOf("open.spotify/"!=-1)){
-                drawQr(ctx,img)
-              }
+              // if($urlspotify.value.indexOf("open.spotify/"!=-1)){
+              //   drawQr(ctx,img)
+              // }
               drawText(ctx)
             }
           }
@@ -130,7 +129,7 @@
               else
                 ctx.font=$tam.value+"px Arial"
               ctx.fillStyle=$color.value
-              ctx.fillText("Este es un Texto de Prueba",$X.value, $Y.value)
+              ctx.fillText("Melanie Almachi",$X.value, $Y.value)
           }
           
 
@@ -157,7 +156,7 @@
           const $Y = document.getElementById("Y")
           const $tam=document.getElementById("TAMANIO")
           const $color=document.getElementById("COLOR")
-          const $urlspotify=document.getElementById("lnkCancion")
+          //const $urlspotify=document.getElementById("lnkCancion")
           const $btn = document.querySelector("#enviar")
           const $datos = document.getElementById("formFileCv")
           // Escuchar cuando cambie
@@ -181,9 +180,9 @@
             updateCanvas($seleccionArchivos,ctx)
           });
 
-          $urlspotify.addEventListener("change",()=>{
-            updateCanvas($seleccionArchivos,ctx)
-          });
+          // $urlspotify.addEventListener("change",()=>{
+          //   updateCanvas($seleccionArchivos,ctx)
+          // });
 
           $seleccionarFuente.addEventListener("change", () => {
             //Se agrega la fuente desde el cache usando FontFace
@@ -200,7 +199,7 @@
             $tam.disabled=false;
             $color.disabled=false;
             $seleccionarFuente.disabled=false;
-            $urlspotify.disabled=false;
+            //$urlspotify.disabled=false;
             var img = new Image();
             // Los archivos seleccionados, pueden ser muchos o uno
             const archivos = $seleccionArchivos.files;
