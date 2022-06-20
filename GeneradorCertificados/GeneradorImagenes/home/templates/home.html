@@ -124,12 +124,17 @@
           }
 
           function drawText(ctx){
-            if($seleccionarFuente.files.length!=0)
+            let dimTextF = 0.0
+            if($seleccionarFuente.files.length!=0){
+                dimTextF = (ctx.measureText("Melanie Lucia Almachi Perez").width)/2
                 ctx.font=$tam.value+"px MyCanvasFont"
+                const circle = new Path2D();
+                circle.arc($X.value, $Y.value, 25, 0, 2 * Math.PI)
+            }
               else
-                ctx.font=$tam.value+"px Arial"
+                  ctx.font=$tam.value+"px Arial"
               ctx.fillStyle=$color.value
-              ctx.fillText("Melanie Almachi",$X.value, $Y.value)
+              ctx.fillText("Melanie Lucia Almachi Perez",($X.value - dimTextF), $Y.value)
           }
           
 

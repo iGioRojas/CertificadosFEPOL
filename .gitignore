@@ -2,9 +2,8 @@ Include/
 Lib/
 Scripts/
 media/
-migrations/
 __pycache__/
 settigns.py
 pyvenv.cfg
 .gitignore
-
+*.pyc

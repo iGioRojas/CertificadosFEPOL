@@ -61,7 +61,8 @@ def generarCertificado(id):
         # ubicacion = (int(certificadoW/2)-int(qrsize[0]/2), certificadoH-70)
         # certificado.paste(qr, ubicacion)
         nuevo = ImageDraw.Draw(certificado)
-        coordenadas = (objeto.coordenadaX, objeto.coordenadaY -
+        ubiRelativa = tipo_letra.getlength(nombreCertificado[i])/2
+        coordenadas = (objeto.coordenadaX-ubiRelativa, objeto.coordenadaY -
                        objeto.tamanioTexto+10)
         color_texto = hexToRGB(objeto.colorTexto)
         nuevo.text(coordenadas, nombreCertificado[i], fill=color_texto, font=tipo_letra, align='center')
